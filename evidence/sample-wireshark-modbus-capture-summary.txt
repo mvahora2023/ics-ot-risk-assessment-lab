@@ -1,0 +1,55 @@
+Wireshark Packet Capture Summary — Modbus-TCP Traffic Analysis
+Capture Source: CS-ALPHA-ATK-KALI, positioned on OT network segment (192.168.50.0/24)
+Capture File: modbus-capture-2026-06-01.pcapng (not included — summary only, portfolio artifact)
+Duration: 00:04:12 | Packets Captured: 3,841 | Protocol Filter: modbus
+==========================================================================
+
+SUMMARY OF OBSERVED TRAFFIC
+
+1. Session: CS-ALPHA-HMI-01 (192.168.50.20) <-> CS-ALPHA-PLC-01 (192.168.50.10)
+   - Protocol: Modbus-TCP, port 502
+   - Function codes observed: 0x03 (Read Holding Registers), 0x06 (Write Single
+     Register), 0x10 (Write Multiple Registers)
+   - Authentication: NONE — Modbus-TCP as implemented has no native authentication
+     layer, and no compensating application-layer authentication was observed.
+   - Notable frames:
+       Frame 214: Write Single Register (0x06) to address 40012 (discharge
+       pressure setpoint), value changed from 850 to 900 (PSI, simulated units)
+       with no corresponding operator confirmation dialog captured in the
+       HMI-to-PLC session — consistent with an unauthenticated write path.
+   - Finding reference: VUL-005, VUL-001, RISK-001
+
+2. Session: CS-ALPHA-EWS-01 (192.168.50.21) <-> CS-ALPHA-PLC-01 (192.168.50.10)
+   - Protocol: Modbus-TCP, port 502
+   - Function codes observed: 0x03, 0x10, 0x08 (Diagnostics)
+   - Notable frames:
+       Frames 502-511: Bulk register write consistent with a logic/configuration
+       push from the Engineering Workstation with no session-level authentication
+       token exchanged prior to the write sequence.
+   - Finding reference: VUL-001, VUL-006
+
+3. Session: CS-ALPHA-HMI-01 (192.168.50.20) <-> CS-ALPHA-RTU-01 (192.168.50.40)
+   - Protocol: Modbus-TCP, port 502
+   - Function codes observed: 0x04 (Read Input Registers)
+   - Notable frames:
+       Continuous polling observed at ~1-second intervals for tank level and flow
+       rate telemetry, all in cleartext with no transport-layer encryption.
+   - Finding reference: VUL-005
+
+4. Session: CS-ALPHA-OPC-01 (192.168.50.25) <-> External Analytics Client (simulated)
+   - Protocol: OPC-UA, port 4840
+   - Observed: Anonymous session establishment accepted; subsequent write request
+     to a process tag succeeded without elevated authentication.
+   - Finding reference: VUL-008
+
+==========================================================================
+ANALYST NOTE
+
+The absence of any authentication challenge across all four captured Modbus/OPC-UA
+sessions confirms VUL-005 (legacy protocol without authentication) is not a
+theoretical/architectural concern but an observed, exploitable condition in this
+lab environment: any host with network reachability to port 502 or 4840 on these
+assets can issue read AND write commands without credentials. This directly
+supports the RISK-001 and RISK-005 severity ratings in the formal risk assessment
+report, since network reachability alone -- not credential compromise -- is
+sufficient to manipulate PLC register values in this environment.

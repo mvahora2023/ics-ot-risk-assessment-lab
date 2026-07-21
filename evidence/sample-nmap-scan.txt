@@ -1,0 +1,71 @@
+Nmap Asset Discovery Scan — CS-ALPHA OT Network Segment (Simulated GRFICS Lab)
+Scan performed from CS-ALPHA-ATK-KALI (192.168.10.100) via authorized lab assessment
+Command: nmap -sV -p- --open -oN sample-nmap-scan.txt 192.168.50.0/24
+==========================================================================
+
+Starting Nmap 7.94 ( https://nmap.org ) at 2026-06-01 10:14 EDT
+Nmap scan report for CS-ALPHA-PLC-01 (192.168.50.10)
+Host is up (0.0012s latency).
+PORT     STATE SERVICE     VERSION
+502/tcp  open  modbus      GRFICS Simulated PLC Modbus Server (unauthenticated)
+80/tcp   open  http        GRFICS Simulated Web Config Interface
+Notes: No authentication challenge observed on Modbus (502/tcp) service. Default web
+config credentials accepted (admin/admin). --> Corresponds to VUL-001, VUL-005.
+
+Nmap scan report for CS-ALPHA-PLC-02 (192.168.50.11)
+Host is up (0.0014s latency).
+PORT     STATE SERVICE     VERSION
+502/tcp  open  modbus      GRFICS Simulated PLC Modbus Server (unauthenticated)
+Notes: Consistent with PLC-01 findings. Secondary control loop, same exposure.
+
+Nmap scan report for CS-ALPHA-HMI-01 (192.168.50.20)
+Host is up (0.0009s latency).
+PORT     STATE SERVICE       VERSION
+135/tcp  open  msrpc         Microsoft Windows RPC
+445/tcp  open  microsoft-ds  Windows 10 (simulated, unpatched build)
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+Notes: SMB service version consistent with an unpatched build vulnerable to
+SMB-class remote code execution (see VUL-002). RDP exposed to OT network segment.
+
+Nmap scan report for CS-ALPHA-EWS-01 (192.168.50.21)
+Host is up (0.0011s latency).
+PORT     STATE SERVICE       VERSION
+445/tcp  open  microsoft-ds  Windows 10 (simulated)
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+Notes: Engineering Workstation reachable directly from Level 2 segment; no
+jump-host enforcement observed for lateral access from HMI subnet.
+
+Nmap scan report for CS-ALPHA-HIST-01 (192.168.50.30)
+Host is up (0.0016s latency).
+PORT     STATE SERVICE   VERSION
+1433/tcp open  ms-sql-s  Simulated SQL Historian Data Store
+Notes: Reachable from IT-facing jump host without an intermediate DMZ proxy
+enforcing read-only access (see VUL-007).
+
+Nmap scan report for CS-ALPHA-RTU-01 (192.168.50.40)
+Host is up (0.0013s latency).
+PORT     STATE SERVICE VERSION
+502/tcp  open  modbus  GRFICS Simulated RTU (unauthenticated)
+
+Nmap scan report for CS-ALPHA-RTU-02 (192.168.50.41)
+Host is up (0.0013s latency).
+PORT     STATE SERVICE VERSION
+502/tcp  open  modbus  GRFICS Simulated RTU (unauthenticated)
+
+Nmap scan report for CS-ALPHA-OPC-01 (192.168.50.25)
+Host is up (0.0010s latency).
+PORT     STATE SERVICE VERSION
+4840/tcp open  opcua   Simulated OPC-UA Gateway
+Notes: Anonymous OPC-UA session permitted with write-level tag access (VUL-008).
+
+Nmap scan report for CS-ALPHA-PRT-01 (192.168.50.50)
+Host is up (0.0021s latency).
+PORT     STATE SERVICE VERSION
+9100/tcp open  jetdirect Legacy embedded print service, firmware version unknown
+
+Nmap done: 256 IP addresses (9 hosts up) scanned in 14.82 seconds
+
+==========================================================================
+Assessment Note: All 9 discovered OT-segment hosts were reachable from a single
+flat broadcast domain with no VLAN separation observed between Level 1 and Level 2
+device classes, consistent with VUL-003 / RISK-005 in the formal risk assessment.
