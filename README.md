@@ -1,6 +1,6 @@
 # ICS/OT Risk Assessment Lab
 
-A hands-on ICS/OT cybersecurity risk assessment built against a simulated SCADA environment, using the **GRFICS** open-source ICS simulation platform, in direct support of a career transition targeting a Cybersecurity Senior GRC Analyst role at a regulated natural gas utility that explicitly requires OT/SCADA experience.
+A documented ICS/OT cybersecurity risk-assessment portfolio using a modeled SCADA environment and GRFICS-based scenario. It illustrates asset inventory, threat modeling, risk scoring, and remediation planning; the repository's scan and packet-capture examples are explicitly simulated, not evidence of an independently verified live test.
 
 > **Portfolio Disclosure:** All assets, network addresses, and findings are generated within an isolated lab environment. "Keystone Gas & Electric" is fictional. No production OT system or real utility infrastructure is represented.
 
