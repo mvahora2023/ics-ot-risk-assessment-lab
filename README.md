@@ -44,3 +44,11 @@ This project directly answers the single most commonly cited gap for candidates 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Interactive project dashboard (November 2026)
+
+- **[Open this project's public interactive explorer](https://arsh-project-lab.vercel.app/ics-ot-risk-assessment-lab/index.html)**
+- **[Run the standalone HTML locally](dashboard/index.html)** (no account or service required)
+- **[Open the complete public Project Lab](https://arsh-project-lab.vercel.app/)**
+
+Inspect simulated industrial-control assets; no operational network access. Source-linked sample data is embedded for offline inspection. Search, group filters and CSV export work locally; checklist review marks (where available) are browser-local only. The page is not a live backend, and changes in this repository will require a separate Vercel deployment until a Git integration is enabled. [Dashboard validation source](tests/dashboard_ui.test.mjs).
